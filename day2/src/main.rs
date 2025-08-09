@@ -8,6 +8,15 @@ fn int_vec_from_str(s: &str) -> Vec<i32> {
         .collect()
 }
 
+fn is_increasing(ints: &Vec<i32>) -> bool {
+    for (i, val) in ints.iter().skip(1).enumerate() {
+        if ints[i - 1] >= *val {
+            return false;
+        }
+    }
+    true
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
  

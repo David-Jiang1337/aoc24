@@ -61,6 +61,7 @@ fn largest_abs_change(ints: &Vec<i32>) -> i32 {
 fn main() {
     let args: Vec<String> = env::args().collect();
     
+    
     // ensures correct number of args
     if args.len() != 2 {
         println!("usage: {} <filepath>", args[0]);
@@ -70,5 +71,18 @@ fn main() {
     let file_to_read = fs::read_to_string(&args[1])
         .expect("oops we couldn't get that file.");
 
-    let mut reports: Vec<&str> = file_to_read.lines().collect();
+    let reports: Vec<&str> = file_to_read.lines().collect();
+    
+    let mut safe_count: u32 = 0;
+
+    for line in reports {
+        let levels: Vec<i32> = int_vec_from_str(line);
+        let chg = largest_abs_change(&levels);
+        if (is_increasing(&levels) || is_decreasing(&levels))
+            && (chg >= 1 && chg <= 3) {
+                safe_count += 1;
+        }
+    }
+
+    println!("safe reports: {safe_count}");
 }

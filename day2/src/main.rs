@@ -1,13 +1,21 @@
 use std::env;
 use std::fs;
 
+/*
+ * returns the string as integers within a vector separated by whitespaces.
+ * if there are substrings that cannot be parsed as integers, panic.
+ */
 fn int_vec_from_str(s: &str) -> Vec<i32> {
     s.split_whitespace()
         .filter(|&s| !s.is_empty())
         .map(|s| s.parse::<i32>().expect("reports must only contain integers"))
         .collect()
 }
-
+/*
+ * returns true if every element in the vector fulfills the comparison condition
+ * with the next element in the vector, or if the list is empty or has only one
+ * element. otherwise, returns false.
+ */
 fn is_ordered(ints: &Vec<i32>, compare: fn(i32, i32) -> bool) -> bool {
     for (i, val) in ints.iter().skip(1).enumerate() {
         if !compare(ints[i - 1], *val){
@@ -17,10 +25,18 @@ fn is_ordered(ints: &Vec<i32>, compare: fn(i32, i32) -> bool) -> bool {
     true
 }
 
+/*
+ * returns true if every element is greater than the last, or if the vector has
+ * only one element or is empty. otherwise, return false.
+ */
 fn is_increasing(ints: &Vec<i32>) -> bool {
     is_ordered(ints, |a: i32, b: i32| a < b)
 }
 
+/*
+ * returns true if every element is smaller than the last, or if the vector has
+ * only one element or is empty. otherwise, return false.
+ */
 fn is_decreasing(ints: &Vec<i32>) -> bool {
     is_ordered(ints, |a: i32, b: i32| a > b)
 }

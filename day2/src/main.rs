@@ -25,6 +25,23 @@ fn is_decreasing(ints: &Vec<i32>) -> bool {
     is_ordered(ints, |a: i32, b: i32| a > b)
 }
 
+fn largest_abs_change(ints: &Vec<i32>) -> i32 {
+    let mut largest: i32 = 0;
+    for (i, val) in ints.iter().skip(1).enumerate() {
+        let val = *val;
+        let prev_val = ints[i - 1];
+        let chg = if prev_val > val {
+            prev_val - val
+        } else {
+            val - prev_val
+        };
+        if chg > largest {
+            largest = chg;
+        }
+    }
+    largest
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     
@@ -38,5 +55,4 @@ fn main() {
         .expect("oops we couldn't get that file.");
 
     let mut reports: Vec<&str> = file_to_read.lines().collect();
-
 }

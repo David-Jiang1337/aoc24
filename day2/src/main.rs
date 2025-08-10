@@ -30,39 +30,6 @@ fn is_ordered(ints: &Vec<i32>, tolerance: i32, compare: fn(i32, i32) -> bool) ->
 }
 
 /*
- * returns true if every element is greater than the last, or if the vector has
- * only one element or is empty. otherwise, return false.
- */
-fn is_increasing(ints: &Vec<i32>) -> bool {
-    is_ordered(ints, 0, |a: i32, b: i32| a < b)
-}
-
-/*
- * returns true if every element is smaller than the last, or if the vector has
- * only one element or is empty. otherwise, return false.
- */
-fn is_decreasing(ints: &Vec<i32>) -> bool {
-    is_ordered(ints, 0, |a: i32, b: i32| a > b)
-}
-
-fn largest_abs_change(ints: &Vec<i32>) -> i32 {
-    let mut largest: i32 = 0;
-    for (i, val) in ints.iter().skip(1).enumerate() {
-        let val = *val;
-        let prev_val = ints[i];
-        let chg = if prev_val > val {
-            prev_val - val
-        } else {
-            val - prev_val
-        };
-        if chg > largest {
-            largest = chg;
-        }
-    }
-    largest
-}
-
-/*
  * returns true if and only if b is greater than a by no less than 1
  * and no more than 3.
  */

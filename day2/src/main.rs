@@ -16,9 +16,9 @@ fn int_vec_from_str(s: &str) -> Vec<i32> {
  * with the next element in the vector, or if the list is empty or has only one
  * element. otherwise, returns false.
  */
-fn is_ordered(ints: &Vec<i32>, compare: fn(i32, i32) -> bool) -> bool {
+fn is_ordered(ints: &Vec<i32>, tolerance: i32, compare: fn(i32, i32) -> bool) -> bool {
     for (i, val) in ints.iter().skip(1).enumerate() {
-        if !compare(ints[i - 1], *val){
+        if !compare(ints[i], *val){
             return false;
         }
     }
@@ -45,7 +45,7 @@ fn largest_abs_change(ints: &Vec<i32>) -> i32 {
     let mut largest: i32 = 0;
     for (i, val) in ints.iter().skip(1).enumerate() {
         let val = *val;
-        let prev_val = ints[i - 1];
+        let prev_val = ints[i];
         let chg = if prev_val > val {
             prev_val - val
         } else {
@@ -58,9 +58,26 @@ fn largest_abs_change(ints: &Vec<i32>) -> i32 {
     largest
 }
 
+/*
+ * returns true if and only if b is greater than a by no less than 1
+ * and no more than 3.
+ */
+fn greater_by_a_little(a: i32, b: i32) -> bool {
+    let diff = b - a;
+    diff >= 1 && diff <= 3
+}
+
+/*
+ * returns true if and only if b is smaller than a by no less than 1
+ * and no more than 3.
+ */
+fn smaller_by_a_little(a: i32, b: i32) -> bool {
+    let diff = a - b;
+    diff >= 1 && diff <= 3
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
     
     // ensures correct number of args
     if args.len() != 2 {

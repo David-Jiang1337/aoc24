@@ -17,9 +17,13 @@ fn int_vec_from_str(s: &str) -> Vec<i32> {
  * element. otherwise, returns false.
  */
 fn is_ordered(ints: &Vec<i32>, tolerance: i32, compare: fn(i32, i32) -> bool) -> bool {
+    let mut fails = 0;
     for (i, val) in ints.iter().skip(1).enumerate() {
         if !compare(ints[i], *val){
-            return false;
+            fails += 1;
+            if fails > tolerance {
+                return false;
+            }
         }
     }
     true
@@ -30,7 +34,7 @@ fn is_ordered(ints: &Vec<i32>, tolerance: i32, compare: fn(i32, i32) -> bool) ->
  * only one element or is empty. otherwise, return false.
  */
 fn is_increasing(ints: &Vec<i32>) -> bool {
-    is_ordered(ints, |a: i32, b: i32| a < b)
+    is_ordered(ints, 0, |a: i32, b: i32| a < b)
 }
 
 /*
@@ -38,7 +42,7 @@ fn is_increasing(ints: &Vec<i32>) -> bool {
  * only one element or is empty. otherwise, return false.
  */
 fn is_decreasing(ints: &Vec<i32>) -> bool {
-    is_ordered(ints, |a: i32, b: i32| a > b)
+    is_ordered(ints, 0, |a: i32, b: i32| a > b)
 }
 
 fn largest_abs_change(ints: &Vec<i32>) -> i32 {
@@ -94,9 +98,8 @@ fn main() {
 
     for line in reports {
         let levels: Vec<i32> = int_vec_from_str(line);
-        let chg = largest_abs_change(&levels);
-        if (is_increasing(&levels) || is_decreasing(&levels))
-            && (chg >= 1 && chg <= 3) {
+        if is_ordered(&levels, 0, greater_by_a_little)
+            || is_ordered(&levels, 0, smaller_by_a_little) {
                 safe_count += 1;
         }
     }

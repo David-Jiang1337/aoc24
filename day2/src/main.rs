@@ -22,7 +22,7 @@ fn is_ordered(ints: &Vec<i32>, tolerance: i32, compare: fn(i32, i32) -> bool) ->
         if !compare(ints[i], *val){
             fails += 1;
             if fails > tolerance {
-                return i.into();
+                return i.try_into().unwrap();
             }
         }
     }
@@ -61,28 +61,36 @@ fn main() {
 
     let reports: Vec<&str> = file_to_read.lines().collect();
     
-    let mut safe_count: u32 = 0;
+    let mut safe_count_no_dampener: u32 = 0;
+    let mut safe_count_w_dampener: u32 = 0;
 
     for line in reports.iter() {
         let levels: Vec<i32> = int_vec_from_str(line);
-        if is_ordered(&levels, 0, greater_by_a_little)
-            || is_ordered(&levels, 0, smaller_by_a_little) {
-                safe_count += 1;
+        let increase_ordered = is_ordered(&levels, 0, greater_by_a_little);
+        let decrease_ordered = is_ordered(&levels, 0, smaller_by_a_little);
+
+        if increase_ordered == -1 || decrease_ordered == -1 {
+            safe_count_no_dampener += 1;
+            safe_count_w_dampener += 1;
+        } else {
+            let mut increasing_damp_first = levels.clone();
+            let mut increasing_damp_second = levels.clone();
+            let mut decreasing_damp_first = levels.clone();
+            let mut decreasing_damp_second = levels.clone();
+            increasing_damp_first.remove(increase_ordered as usize);
+            increasing_damp_second.remove(increase_ordered as usize + 1);
+            decreasing_damp_first.remove(decrease_ordered as usize);
+            decreasing_damp_second.remove(decrease_ordered as usize + 1);
+
+            if is_ordered(&increasing_damp_first, 0, greater_by_a_little) == -1
+                || is_ordered(&increasing_damp_second, 0, greater_by_a_little) == -1
+                || is_ordered(&decreasing_damp_first, 0, smaller_by_a_little) == -1
+                || is_ordered(&decreasing_damp_second, 0, smaller_by_a_little) == -1 {
+                safe_count_w_dampener += 1;
+            }
         }
     }
 
-    println!("safe reports w/o problem dampener: {safe_count}");
-
-
-    let mut safe_count: u32 = 0;
-
-    for line in reports.iter() {
-        let levels: Vec<i32> = int_vec_from_str(line);
-        if is_ordered(&levels, 1, greater_by_a_little)
-            || is_ordered(&levels, 1, smaller_by_a_little) {
-                safe_count += 1;
-        }
-    }
-
-    println!("safe reports w/ problem dampener: {safe_count}");
+    println!("safe reports w/o problem dampener: {safe_count_no_dampener}");
+    println!("safe reports w/ problem dampener: {safe_count_w_dampener}");
 }

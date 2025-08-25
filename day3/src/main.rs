@@ -7,7 +7,7 @@ static ref NUM_PATTERN: Regex = Regex::new(r"\d+");
 
 /*
  * if the string is in the format "mul(<int>,<int>)", return the product
- * of the two numbers. otherwise, panic
+ * of the two numbers
  */
 fn calc_mul(string: &str) -> i32 {
     
@@ -21,4 +21,17 @@ fn main() {
     
     
 
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_mul() {
+        assert_eq!(calc_mul("mul(1,0)"), 0);
+        assert_eq!(calc_mul("mul(2,3)"), 6);
+        assert_eq!(calc_mul("mul(12,12)"), 144);
+        assert_eq!(calc_mul("mul(50,22)"), 1100);
+    }
 }
